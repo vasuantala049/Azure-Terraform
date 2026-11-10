@@ -1,0 +1,5 @@
+#1 terraform plan -var=environment=dev
+
+
+#2 export environment=dev
+   terraform plan
