@@ -2,12 +2,12 @@
 
 resource "azurerm_resource_group" "example" {
   name     = "${var.environment}-resources"
-  location = "East Asia"
+  location = var.allowed_regions[0]
 }
 
 resource "azurerm_virtual_network" "main" {
   name                = "${var.environment}-network"
-  address_space       = ["10.0.0.0/16"]
+  address_space       = ["${element(var.networking,0)}/${element(var.networking,2)}"]
   location            = azurerm_resource_group.example.location
   resource_group_name = azurerm_resource_group.example.name
 }
@@ -47,10 +47,10 @@ resource "azurerm_virtual_machine" "main" {
   vm_size               = "Standard_B2ats_v2"
 
   storage_image_reference {
-    publisher = "Canonical"
+    publisher = var.vm_config.publisher
     offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts"
-    version   = "latest"
+    sku       = var.vm_config.sku
+    version   = var.vm_config.version
   }
   storage_os_disk {
     name              = "myosdisk1"
@@ -68,5 +68,7 @@ resource "azurerm_virtual_machine" "main" {
   }
   tags = {
     environment = var.environment
+    managed_by = var.tags["managed_by"]
+    department = var.tags["department"]
   }
 }
