@@ -7,9 +7,9 @@ resource "azurerm_monitor_autoscale_setting" "autoscale" {
   profile {
     name = "autoscale"
     capacity {
-      default = 3
+      default = 2
       minimum = 1
-      maximum = 10
+      maximum = 4
     }
     rule {
         metric_trigger {
